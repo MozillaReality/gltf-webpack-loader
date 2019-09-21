@@ -46,6 +46,16 @@
           "instanceof": "RegExp"
         }
       ]
+    },
+    "fileUrlRegex": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "RegExp"
+        }
+      ]
     }
   },
   "errorMessages": {

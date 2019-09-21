@@ -4,14 +4,9 @@ const path = require('path');
 const schema = require('./options.json');
 
 const regExternal = /^https?:\/\//;
-const regFileUrl = /\.(([\w]){3}|jpeg)$/;
 
 function isExternalURL(url) {
 	return regExternal.test(url);
-}
-
-function isFileUrl(url) {
-	return regFileUrl.test(url);
 }
 
 function deepReplace(obj, replace){
@@ -48,6 +43,12 @@ module.exports = function WebpackGLTFLoader(content) {
 	validateOptions(schema, options, 'Webpack GLTF Loader');
 	const context = options.context || this.rootContext;
 
+	const fileUrlRegex = options.fileUrlRegex ? new RegExp(options.fileUrlRegex) :  /\.(bin|jpeg|png)$/;
+
+	function isFileUrl(url) {
+		return fileUrlRegex.test(url);
+	}
+	
 	const url = loaderUtils.interpolateName(this, options.name, {
 		context,
 		content,
@@ -57,6 +58,14 @@ module.exports = function WebpackGLTFLoader(content) {
 	content = typeof content === 'string' ? JSON.parse(content) : content;
 
 	let outputPath = url;
+
+  if (options.outputPath) {
+    if (typeof options.outputPath === 'function') {
+      outputPath = options.outputPath(url, this.resourcePath, context);
+    } else {
+      outputPath = path.posix.join(options.outputPath, url);
+    }
+  }
 
 	const completeResolve = [];
 
@@ -74,7 +83,7 @@ module.exports = function WebpackGLTFLoader(content) {
 					const match = /"([\w\W]+)"/.exec(result);
 
 					if(match && match.length > 1){
-            obj[key] = path.relative(path.dirname(url), match[1]);
+            obj[key] = path.relative(path.dirname(outputPath), match[1]);
 					}
 
 					resolve(match);
