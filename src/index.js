@@ -43,7 +43,7 @@ module.exports = function WebpackGLTFLoader(content) {
 	validateOptions(schema, options, 'Webpack GLTF Loader');
 	const context = options.context || this.rootContext;
 
-	const fileUrlRegex = options.fileUrlRegex ? new RegExp(options.fileUrlRegex) :  /\.(bin|jpeg|png)$/;
+	const fileUrlRegex = options.fileUrlRegex ? new RegExp(options.fileUrlRegex) :  /\.(bin|jpeg|jpg|png)$/;
 
 	function isFileUrl(url) {
 		return fileUrlRegex.test(url);
