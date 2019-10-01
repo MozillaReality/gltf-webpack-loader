@@ -1,7 +1,5 @@
 "use strict";
 
-require("core-js/modules/es6.object.to-string");
-
 const loaderUtils = require('loader-utils');
 
 const validateOptions = require('schema-utils');
